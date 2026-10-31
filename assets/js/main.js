@@ -26,16 +26,14 @@
 
   // Modal
   const modal = $('#enquire');
-  let unlockOnSubmit = false;
-  const openModal = (title, unlock) => {
+  const openModal = title => {
     const f = $('form', modal); f.classList.remove('sent'); f.reset();
     $('#modalTitle').textContent = title || 'Enquire Now';
     f.source.value = title || 'Enquire Now';
-    unlockOnSubmit = !!unlock;
     modal.classList.add('on'); document.body.style.overflow = 'hidden';
   };
   const closeAll = () => { $$('.modal,.lightbox').forEach(m => m.classList.remove('on')); document.body.style.overflow = ''; };
-  $$('[data-open]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.title, b.hasAttribute('data-unlock'))));
+  $$('[data-open]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.title)));
   $$('[data-close]').forEach(b => b.onclick = closeAll);
   $$('.modal,.lightbox').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeAll(); }));
   addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
@@ -49,12 +47,14 @@
     const ph = $('[name=phone]', f), nm = $('[name=name]', f);
     if (!nm.value.trim()) return nm.focus();
     if (!/^[6-9]\d{9}$/.test(ph.value)) { ph.setCustomValidity('Enter a valid 10-digit mobile number'); ph.reportValidity(); ph.setCustomValidity(''); return; }
+    const btn = $('[type=submit]', f); btn.disabled = true; btn.textContent = 'Submitting…';
     submitLead(Object.fromEntries(new FormData(f))).then(() => {
-      f.classList.add('sent');
-      try { sessionStorage.setItem('enq', 1); } catch (e) {}
-      if (f.closest('#enquire') && unlockOnSubmit) $('#fpView').classList.remove('locked');
+      // Any submitted lead unlocks floor plans for the rest of the session
+      try { sessionStorage.setItem('enq', 1); sessionStorage.setItem('fpUnlocked', 1); sessionStorage.setItem('leadName', nm.value); } catch (e) {}
+      location.href = 'thank-you.html';
     });
   }));
+  try { if (sessionStorage.getItem('fpUnlocked')) $('#fpView').classList.remove('locked'); } catch (e) {}
   $$('input[type=tel]').forEach(i => i.addEventListener('input', () => i.value = i.value.replace(/\D/g, '')));
 
   // Gallery tabs
