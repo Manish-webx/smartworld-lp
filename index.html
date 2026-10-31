@@ -19,22 +19,37 @@
       <img src="assets/images/smartworld-logo.png" alt="Smartworld">
       <span>The Edition</span>
     </a>
-    <nav class="menu" id="menu">
-      <a href="#about">About</a>
-      <a href="#amenities">Amenities</a>
-      <a href="#location">Location</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#floorplans">Floor Plans</a>
-      <a href="#construction">Construction</a>
-      <a href="#faqs">FAQs</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <div class="nav-cta">
-      <button class="btn btn-brass" data-open="enquire">Enquire Now</button>
-      <button class="burger" id="burger" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
-    </div>
+    <button class="burger" id="burger" aria-label="Open menu" aria-controls="drawer" aria-expanded="false">
+      <span class="burger-label">Menu</span>
+      <span class="burger-lines"><i></i><i></i><i></i></span>
+    </button>
   </div>
 </header>
+
+<!-- ============ SLIDE-IN MENU ============ -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <img src="assets/images/smartworld-logo.png" alt="Smartworld">
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="drawer-menu">
+    <a href="#about"><small>01</small>About</a>
+    <a href="#amenities"><small>02</small>Amenities</a>
+    <a href="#location"><small>03</small>Location</a>
+    <a href="#gallery"><small>04</small>Gallery</a>
+    <a href="#tour"><small>05</small>Virtual Tour</a>
+    <a href="#floorplans"><small>06</small>Floor Plans</a>
+    <a href="#construction"><small>07</small>Construction</a>
+    <a href="#faqs"><small>08</small>FAQs</a>
+    <a href="#contact"><small>09</small>Contact</a>
+  </nav>
+  <div class="drawer-foot">
+    <button class="btn btn-brass" data-open="enquire">Enquire Now</button>
+    <a href="tel:+910000000000" class="drawer-phone">+91 00000 00000</a>
+    <p>Sector 66, Golf Course Extension Road, Gurugram<br>RERA: RC/REP/HARERA/GGM/756/488/2023/100</p>
+  </div>
+</aside>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">

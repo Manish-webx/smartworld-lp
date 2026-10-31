@@ -6,8 +6,19 @@
   const nav = $('#nav');
   const onScroll = () => nav.classList.toggle('scrolled', scrollY > 40);
   onScroll(); addEventListener('scroll', onScroll, { passive: true });
-  $('#burger').onclick = () => $('#menu').classList.toggle('open');
-  $$('#menu a').forEach(a => a.onclick = () => $('#menu').classList.remove('open'));
+
+  // Slide-in menu
+  const burger = $('#burger'), drawer = $('#drawer');
+  const setDrawer = open => {
+    document.body.classList.toggle('drawer-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    burger.setAttribute('aria-expanded', open);
+    drawer.setAttribute('aria-hidden', !open);
+  };
+  burger.onclick = () => setDrawer(true);
+  $('#drawerClose').onclick = $('#drawerOverlay').onclick = () => setDrawer(false);
+  $$('a, button[data-open]', drawer).forEach(el => el.addEventListener('click', () => setDrawer(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setDrawer(false); });
 
   // Reveal on scroll
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
