@@ -450,7 +450,10 @@ body.drawer-open .drawer-menu a:nth-child(9) {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 10, 8, .55) 0%, rgba(10, 10, 8, .15) 35%, rgba(10, 10, 8, .8) 100%)
+  /* Left-side shade keeps the copy column legible; bottom shade grounds the stats */
+  background:
+    linear-gradient(90deg, rgba(10, 10, 8, .82) 0%, rgba(10, 10, 8, .6) 45%, rgba(10, 10, 8, .15) 75%, rgba(10, 10, 8, 0) 100%),
+    linear-gradient(180deg, rgba(10, 10, 8, .55) 0%, rgba(10, 10, 8, .1) 30%, rgba(10, 10, 8, .5) 70%, rgba(10, 10, 8, .9) 100%)
 }
 
 .hero .wrap {
@@ -464,18 +467,83 @@ body.drawer-open .drawer-menu a:nth-child(9) {
 }
 
 .hero .eyebrow {
-  color: var(--brass-2)
+  color: #f1dcb2;
+  background: rgba(10, 10, 8, .55);
+  backdrop-filter: blur(6px);
+  padding: 9px 18px;
+  border-radius: 50px;
+  border: 1px solid rgba(201, 166, 107, .35);
+  letter-spacing: .2em
+}
+
+.hero .eyebrow::before {
+  display: none
 }
 
 .hero h1 {
   font-size: clamp(46px, 7vw, 96px);
-  margin: 20px 0 22px
+  margin: 20px 0 22px;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, .45)
+}
+
+.hero h1 em {
+  color: #e2c48e
 }
 
 .hero p {
   font-size: 18px;
   max-width: 560px;
-  opacity: .88
+  color: rgba(255, 255, 255, .95);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, .6)
+}
+
+.hero-badge {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 7px 16px 7px 12px;
+  border-radius: 50px;
+  background: var(--brass);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase
+}
+
+.hero-badge i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: blink 1.4s infinite
+}
+
+@keyframes blink {
+  50% {
+    opacity: .25
+  }
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px
+}
+
+.btn-light {
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .55);
+  color: #fff;
+  backdrop-filter: blur(6px)
+}
+
+.btn-light:hover {
+  background: #fff;
+  color: var(--ink)
 }
 
 .hero-meta {
@@ -485,9 +553,21 @@ body.drawer-open .drawer-menu a:nth-child(9) {
   flex-wrap: wrap
 }
 
+.hero-meta sup {
+  font-size: .5em;
+  color: var(--brass-2)
+}
+
+.hero .hero-note {
+  font-size: 11px;
+  margin-top: 14px;
+  color: rgba(255, 255, 255, .6)
+}
+
 .hero-meta div {
-  border-left: 1px solid rgba(255, 255, 255, .35);
-  padding-left: 16px
+  border-left: 2px solid var(--brass);
+  padding-left: 16px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .6)
 }
 
 .hero-meta b {
@@ -502,7 +582,7 @@ body.drawer-open .drawer-menu a:nth-child(9) {
   font-size: 12px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  opacity: .75
+  color: rgba(255, 255, 255, .85)
 }
 
 /* Form card */
@@ -1949,6 +2029,16 @@ footer {
     min-height: auto
   }
 
+  .hero::after {
+    background: linear-gradient(180deg, rgba(10, 10, 8, .7) 0%, rgba(10, 10, 8, .6) 50%, rgba(10, 10, 8, .85) 100%)
+  }
+
+  .hero .eyebrow {
+    font-size: 10px;
+    letter-spacing: .14em;
+    padding: 8px 14px
+  }
+
   .hero .wrap {
     gap: 36px
   }
@@ -2110,4 +2200,26 @@ footer {
     opacity: 1;
     transform: none
   }
+}
+/* Highlight line icons */
+.hl svg {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  display: block;
+  color: var(--brass)
+}
+
+/* Embedded Google map */
+.map-embed {
+  cursor: default;
+  aspect-ratio: 4 / 3
+}
+
+.map-embed iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  filter: grayscale(.35) contrast(1.05)
 }
