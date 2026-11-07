@@ -2707,3 +2707,60 @@ footer .wrap {
 .legal-page .ty-back {
   border-color: var(--line)
 }
+
+/* Sticky right-side Enquire tab */
+.side-enquire {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  z-index: 65;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 13px;
+  background: var(--brass);
+  color: #fff;
+  border-radius: 12px 0 0 12px;
+  box-shadow: -6px 8px 24px rgba(0, 0, 0, .25);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  transition: background .3s, padding .3s
+}
+
+.side-enquire span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg)
+}
+
+.side-enquire svg {
+  width: 18px;
+  height: 18px;
+  animation: nudge 2.4s ease-in-out infinite
+}
+
+@keyframes nudge {
+  0%, 70%, 100% { transform: rotate(0) }
+  78% { transform: rotate(-14deg) }
+  86% { transform: rotate(14deg) }
+}
+
+.side-enquire:hover {
+  background: var(--ink);
+  padding-right: 18px
+}
+
+/* Hide while the menu or a popup is open, and on phones (bottom bar covers it) */
+body.drawer-open .side-enquire,
+body:has(.modal.on, .lightbox.on) .side-enquire {
+  display: none
+}
+
+@media(max-width:720px) {
+  .side-enquire {
+    display: none
+  }
+}
