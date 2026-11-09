@@ -40,19 +40,83 @@
   // Auto-open enquiry popup once after 20s
   setTimeout(() => { if (!sessionStorage.getItem('enq') && !$('.modal.on,.lightbox.on')) { openModal('Get Exclusive Pre-Launch Price'); try { sessionStorage.setItem('enq', 1); } catch (e) {} } }, 20000);
 
-  // Forms — wire `submitLead` to your CRM / Google Sheet / webhook
-  const submitLead = data => { console.log('Lead', data); return Promise.resolve(); };
-  $$('.js-form').forEach(f => f.addEventListener('submit', e => {
+  // Forms — submit leads asynchronously to mail1.php
+  const submitLead = async (formData) => {
+    const res = await fetch('mail1.php', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server returned HTTP ${res.status}`);
+    }
+
+    const data = await res.json().catch(() => ({ status: 'success', redirect: 'thank-you.html' }));
+    if (data && data.status === 'error') {
+      throw new Error(data.message || 'Submission error');
+    }
+    return data;
+  };
+
+  $$('.js-form').forEach(f => f.addEventListener('submit', async e => {
     e.preventDefault();
     const ph = $('[name=phone]', f), nm = $('[name=name]', f);
-    if (!nm.value.trim()) return nm.focus();
-    if (!/^[6-9]\d{9}$/.test(ph.value)) { ph.setCustomValidity('Enter a valid 10-digit mobile number'); ph.reportValidity(); ph.setCustomValidity(''); return; }
-    const btn = $('[type=submit]', f); btn.disabled = true; btn.textContent = 'Submitting…';
-    submitLead(Object.fromEntries(new FormData(f))).then(() => {
+    if (!nm || !nm.value.trim()) return nm && nm.focus();
+
+    const cleanPh = (ph ? ph.value : '').replace(/\D/g, '');
+    if (!/^[6-9]\d{9}$/.test(cleanPh)) {
+      ph.setCustomValidity('Enter a valid 10-digit mobile number');
+      ph.reportValidity();
+      ph.setCustomValidity('');
+      return ph.focus();
+    }
+
+    const btn = $('[type=submit]', f);
+    const origText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+    }
+
+    try {
+      const formData = new FormData(f);
+      formData.set('phone', cleanPh);
+      if (!formData.get('url')) {
+        formData.set('url', window.location.href);
+      }
+      formData.set('ajax', '1');
+
+      // Append UTM parameters if present in URL
+      const sp = new URLSearchParams(window.location.search);
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(k => {
+        if (sp.get(k) && !formData.has(k)) {
+          formData.set(k, sp.get(k));
+        }
+      });
+
+      const result = await submitLead(formData);
+
       // Any submitted lead unlocks floor plans for the rest of the session
-      try { sessionStorage.setItem('enq', 1); sessionStorage.setItem('fpUnlocked', 1); sessionStorage.setItem('leadName', nm.value); } catch (e) {}
-      location.href = 'thank-you.html';
-    });
+      try {
+        sessionStorage.setItem('enq', '1');
+        sessionStorage.setItem('fpUnlocked', '1');
+        sessionStorage.setItem('leadName', nm.value.trim());
+      } catch (err) {}
+
+      const redirectUrl = (result && result.redirect) || ('thank-you.html?name=' + encodeURIComponent(nm.value.trim()));
+      location.href = redirectUrl;
+    } catch (err) {
+      console.error('Lead submission error:', err);
+      alert(err.message || 'There was a temporary problem submitting your enquiry. Please try again or call us at +91 93555 58585.');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
   }));
   try { if (sessionStorage.getItem('fpUnlocked')) $('#fpView').classList.remove('locked'); } catch (e) {}
   $$('input[type=tel]').forEach(i => i.addEventListener('input', () => i.value = i.value.replace(/\D/g, '')));
