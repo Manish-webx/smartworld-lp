@@ -701,7 +701,8 @@
       const track = document.querySelector('.awards-slider-track');
       const prev = document.querySelector('.awards-prev');
       const next = document.querySelector('.awards-next');
-      if (!track || !prev || !next) return;
+      if (!track || !prev || !next || track.dataset.init) return;
+      track.dataset.init = '1';
 
       const slides = Array.from(track.querySelectorAll('.award-slide'));
       if (!slides.length) return;

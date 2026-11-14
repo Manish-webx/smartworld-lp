@@ -207,7 +207,8 @@
   const awardsPrev = $('.awards-prev');
   const awardsNext = $('.awards-next');
 
-  if (awardsTrack && awardsPrev && awardsNext) {
+  if (awardsTrack && awardsPrev && awardsNext && !awardsTrack.dataset.init) {
+    awardsTrack.dataset.init = '1';
     const slides = $$('.award-slide', awardsTrack);
     let currentIndex = 0;
 
